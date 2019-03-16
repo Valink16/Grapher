@@ -5,23 +5,23 @@ constants = require "constants"
 Affine_function = require "Affine_function"
 grid = require "grid"
 
-width = love.graphics.getWidth()
-height = love.graphics.getHeight()
-half_width = width / 2
-half_height = height / 2
+function love.load() 
+    love.window.setMode(constants.window_width, constants.window_height, {msaa=8})
 
-function love.draw() 
-    love.graphics.translate(half_width, half_height)
+    half_width = constants.window_width / 2
+    half_height = constants.window_height / 2
 
-    -- Drawing x and y axis
-    love.graphics.line(-half_width, 0, half_width, 0)
-    love.graphics.line(0, -half_height, 0, half_width)
-
-    grid.draw(half_width, half_height, 
+    grid = grid.create_canvas(half_width, half_height, 
         constants.pixels_per_print, constants.pixels_per_unit, constants.grid_alpha)
 
-    my_lf = Affine_function.new(2, 0)
-    y1 = my_lf:image(0)
-    y2 = my_lf:image(100)
-    Affine_function.draw(0, y1, 100, y2)
+    my_lf = Affine_function.new(0.1, 0)
+end
+
+function love.draw() 
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setBlendMode("alpha", "premultiplied")
+    love.graphics.draw(grid, 0, 0)
+    love.graphics.translate(half_width, half_height)
+
+    my_lf:graph(half_width)
 end
